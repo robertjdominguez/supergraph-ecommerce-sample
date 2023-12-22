@@ -1,0 +1,355 @@
+kind: HasuraHubDataConnector
+version: v1
+definition:
+  name: pg_db
+  connectorId: hasura/postgres
+  connectorConfiguration:
+  - region: gcp-us-west2
+    mode: ReadOnly
+    configuration:
+      version: 1
+      connectionUri:
+        uri:
+          stringValueFromSecret: PG_DB_URL
+      metadata:
+        aggregateFunctions:
+          int4:
+            bit_and:
+              returnType: int4
+            bit_or:
+              returnType: int4
+            bit_xor:
+              returnType: int4
+            max:
+              returnType: int4
+            min:
+              returnType: int4
+          text:
+            max:
+              returnType: text
+            min:
+              returnType: text
+          timestamp:
+            max:
+              returnType: timestamp
+            min:
+              returnType: timestamp
+        comparisonOperators:
+          int4:
+            _eq:
+              argumentType: int4
+              operatorName: "="
+            _gt:
+              argumentType: int4
+              operatorName: ">"
+            _gte:
+              argumentType: int4
+              operatorName: ">="
+            _lt:
+              argumentType: int4
+              operatorName: <
+            _lte:
+              argumentType: int4
+              operatorName: <=
+            _neq:
+              argumentType: int4
+              operatorName: <>
+          jsonb:
+            _eq:
+              argumentType: jsonb
+              operatorName: "="
+            _gt:
+              argumentType: jsonb
+              operatorName: ">"
+            _gte:
+              argumentType: jsonb
+              operatorName: ">="
+            _lt:
+              argumentType: jsonb
+              operatorName: <
+            _lte:
+              argumentType: jsonb
+              operatorName: <=
+            _neq:
+              argumentType: jsonb
+              operatorName: <>
+          text:
+            _eq:
+              argumentType: text
+              operatorName: "="
+            _gt:
+              argumentType: text
+              operatorName: ">"
+            _gte:
+              argumentType: text
+              operatorName: ">="
+            _ilike:
+              argumentType: text
+              operatorName: "~~*"
+            _iregex:
+              argumentType: text
+              operatorName: "~*"
+            _like:
+              argumentType: text
+              operatorName: "~~"
+            _lt:
+              argumentType: text
+              operatorName: <
+            _lte:
+              argumentType: text
+              operatorName: <=
+            _neq:
+              argumentType: text
+              operatorName: <>
+            _nilike:
+              argumentType: text
+              operatorName: "!~~*"
+            _niregex:
+              argumentType: text
+              operatorName: "!~*"
+            _nlike:
+              argumentType: text
+              operatorName: "!~~"
+            _nregex:
+              argumentType: text
+              operatorName: "!~"
+            _regex:
+              argumentType: text
+              operatorName: "~"
+          timestamp:
+            _eq:
+              argumentType: timestamp
+              operatorName: "="
+            _gt:
+              argumentType: timestamp
+              operatorName: ">"
+            _gte:
+              argumentType: timestamp
+              operatorName: ">="
+            _lt:
+              argumentType: timestamp
+              operatorName: <
+            _lte:
+              argumentType: timestamp
+              operatorName: <=
+            _neq:
+              argumentType: timestamp
+              operatorName: <>
+          uuid:
+            _eq:
+              argumentType: uuid
+              operatorName: "="
+            _gt:
+              argumentType: uuid
+              operatorName: ">"
+            _gte:
+              argumentType: uuid
+              operatorName: ">="
+            _lt:
+              argumentType: uuid
+              operatorName: <
+            _lte:
+              argumentType: uuid
+              operatorName: <=
+            _neq:
+              argumentType: uuid
+              operatorName: <>
+          varchar:
+            _eq:
+              argumentType: varchar
+              operatorName: "="
+            _gt:
+              argumentType: varchar
+              operatorName: ">"
+            _gte:
+              argumentType: varchar
+              operatorName: ">="
+            _ilike:
+              argumentType: varchar
+              operatorName: "~~*"
+            _iregex:
+              argumentType: varchar
+              operatorName: "~*"
+            _like:
+              argumentType: varchar
+              operatorName: "~~"
+            _lt:
+              argumentType: varchar
+              operatorName: <
+            _lte:
+              argumentType: varchar
+              operatorName: <=
+            _neq:
+              argumentType: varchar
+              operatorName: <>
+            _nilike:
+              argumentType: varchar
+              operatorName: "!~~*"
+            _niregex:
+              argumentType: varchar
+              operatorName: "!~*"
+            _nlike:
+              argumentType: varchar
+              operatorName: "!~~"
+            _nregex:
+              argumentType: varchar
+              operatorName: "!~"
+            _regex:
+              argumentType: varchar
+              operatorName: "~"
+        nativeQueries: {}
+        tables:
+          user_activity_logs:
+            columns:
+              activity:
+                description: null
+                name: activity
+                nullable: nullable
+                type: text
+              log_id:
+                description: null
+                name: log_id
+                nullable: nonNullable
+                type: int4
+              log_timestamp:
+                description: null
+                name: log_timestamp
+                nullable: nullable
+                type: timestamp
+              user_id:
+                description: null
+                name: user_id
+                nullable: nullable
+                type: uuid
+            description: null
+            foreignRelations:
+              user_activity_logs_user_id_fkey:
+                columnMapping:
+                  user_id: id
+                foreignSchema: public
+                foreignTable: users
+            schemaName: public
+            tableName: user_activity_logs
+            uniquenessConstraints:
+              user_activity_logs_pkey:
+              - log_id
+          user_preferences:
+            columns:
+              preference_id:
+                description: null
+                name: preference_id
+                nullable: nonNullable
+                type: int4
+              preferences:
+                description: null
+                name: preferences
+                nullable: nullable
+                type: jsonb
+              user_id:
+                description: null
+                name: user_id
+                nullable: nullable
+                type: uuid
+            description: null
+            foreignRelations:
+              user_preferences_user_id_fkey:
+                columnMapping:
+                  user_id: id
+                foreignSchema: public
+                foreignTable: users
+            schemaName: public
+            tableName: user_preferences
+            uniquenessConstraints:
+              user_preferences_pkey:
+              - preference_id
+          users:
+            columns:
+              email:
+                description: null
+                name: email
+                nullable: nonNullable
+                type: varchar
+              id:
+                description: null
+                name: id
+                nullable: nonNullable
+                type: uuid
+              password_hash:
+                description: null
+                name: password_hash
+                nullable: nonNullable
+                type: varchar
+              registration_date:
+                description: null
+                name: registration_date
+                nullable: nullable
+                type: timestamp
+              username:
+                description: null
+                name: username
+                nullable: nonNullable
+                type: varchar
+            description: null
+            foreignRelations: {}
+            schemaName: public
+            tableName: users
+            uniquenessConstraints:
+              users_email_key:
+              - email
+              users_pkey:
+              - id
+              users_username_key:
+              - username
+      configureOptions:
+        comparisonOperatorMapping:
+        - exposedName: _eq
+          operatorName: "="
+        - exposedName: _lte
+          operatorName: <=
+        - exposedName: _gt
+          operatorName: ">"
+        - exposedName: _gte
+          operatorName: ">="
+        - exposedName: _lt
+          operatorName: <
+        - exposedName: _neq
+          operatorName: "!="
+        - exposedName: _like
+          operatorName: LIKE
+        - exposedName: _nlike
+          operatorName: NOT LIKE
+        - exposedName: _ilike
+          operatorName: ILIKE
+        - exposedName: _nilike
+          operatorName: NOT ILIKE
+        - exposedName: _similar
+          operatorName: SIMILAR TO
+        - exposedName: _nsimilar
+          operatorName: NOT SIMILAR TO
+        - exposedName: _neq
+          operatorName: <>
+        - exposedName: _like
+          operatorName: "~~"
+        - exposedName: _nlike
+          operatorName: "!~~"
+        - exposedName: _ilike
+          operatorName: "~~*"
+        - exposedName: _nilike
+          operatorName: "!~~*"
+        - exposedName: _regex
+          operatorName: "~"
+        - exposedName: _nregex
+          operatorName: "!~"
+        - exposedName: _iregex
+          operatorName: "~*"
+        - exposedName: _niregex
+          operatorName: "!~*"
+        excludedSchemas:
+        - information_schema
+        - pg_catalog
+        - tiger
+        - crdb_internal
+        - columnar
+        - columnar_internal
+        unqualifiedSchemas:
+        - public

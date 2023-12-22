@@ -1,0 +1,95 @@
+kind: ObjectType
+version: v1
+definition:
+  name: categories
+  graphql:
+    typeName: productManagementCategories
+    inputTypeName: productManagementCategoriesInput
+  fields:
+    - name: category_id
+      type: int4!
+    - name: description
+      type: text
+    - name: name
+      type: varchar!
+
+---
+kind: TypePermissions
+version: v1
+definition:
+  typeName: categories
+  permissions:
+    - role: admin
+      output:
+        allowedFields:
+          - category_id
+          - description
+          - name
+
+---
+kind: Model
+version: v1
+definition:
+  name: categories
+  objectType: categories
+  filterableFields:
+    - fieldName: category_id
+      operators:
+        enableAll: true
+    - fieldName: description
+      operators:
+        enableAll: true
+    - fieldName: name
+      operators:
+        enableAll: true
+  orderableFields:
+    - fieldName: category_id
+      orderByDirections:
+        enableAll: true
+    - fieldName: description
+      orderByDirections:
+        enableAll: true
+    - fieldName: name
+      orderByDirections:
+        enableAll: true
+  arguments: []
+  graphql:
+    selectUniques:
+      - queryRootField: productManagementCategoriesByCategoryId
+        uniqueIdentifier:
+          - category_id
+    selectMany:
+      queryRootField: productManagementCategories
+    filterExpressionType: productManagementCategoriesBoolExp
+    orderByExpressionType: productManagementCategoriesOrderBy
+  source:
+    collection: categories
+    dataConnectorName: pg_db
+
+---
+kind: ModelPermissions
+version: v1
+definition:
+  modelName: categories
+  permissions:
+    - role: admin
+      select:
+        filter: null
+
+---
+kind: Relationship
+version: v1
+definition:
+  name: products
+  source: categories
+  target:
+    model:
+      relationshipType: Array
+      name: products
+  mapping:
+    - source:
+        fieldPath:
+          - fieldName: category_id
+      target:
+        modelField:
+          - fieldName: category_id

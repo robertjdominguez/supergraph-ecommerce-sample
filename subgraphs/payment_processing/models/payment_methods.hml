@@ -1,0 +1,95 @@
+kind: ObjectType
+version: v1
+definition:
+  name: payment_methods
+  graphql:
+    typeName: paymentProcessingPaymentMethods
+    inputTypeName: paymentProcessingPaymentMethodsInput
+  fields:
+    - name: id
+      type: int4!
+    - name: method_details
+      type: jsonb
+    - name: user_id
+      type: uuid
+
+---
+kind: TypePermissions
+version: v1
+definition:
+  typeName: payment_methods
+  permissions:
+    - role: admin
+      output:
+        allowedFields:
+          - id
+          - method_details
+          - user_id
+
+---
+kind: Model
+version: v1
+definition:
+  name: payment_methods
+  objectType: payment_methods
+  filterableFields:
+    - fieldName: id
+      operators:
+        enableAll: true
+    - fieldName: method_details
+      operators:
+        enableAll: true
+    - fieldName: user_id
+      operators:
+        enableAll: true
+  orderableFields:
+    - fieldName: id
+      orderByDirections:
+        enableAll: true
+    - fieldName: method_details
+      orderByDirections:
+        enableAll: true
+    - fieldName: user_id
+      orderByDirections:
+        enableAll: true
+  arguments: []
+  graphql:
+    selectUniques:
+      - queryRootField: paymentProcessingPaymentMethodsById
+        uniqueIdentifier:
+          - id
+    selectMany:
+      queryRootField: paymentProcessingPaymentMethods
+    filterExpressionType: paymentProcessingPaymentMethodsBoolExp
+    orderByExpressionType: paymentProcessingPaymentMethodsOrderBy
+  source:
+    collection: payment_methods
+    dataConnectorName: pg_db
+
+---
+kind: ModelPermissions
+version: v1
+definition:
+  modelName: payment_methods
+  permissions:
+    - role: admin
+      select:
+        filter: null
+
+---
+kind: Relationship
+version: v1
+definition:
+  name: transactions
+  source: payment_methods
+  target:
+    model:
+      relationshipType: Array
+      name: transactions
+  mapping:
+    - source:
+        fieldPath:
+          - fieldName: id
+      target:
+        modelField:
+          - fieldName: method_id

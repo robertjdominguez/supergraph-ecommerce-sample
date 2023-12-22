@@ -1,0 +1,104 @@
+kind: ObjectType
+version: v1
+definition:
+  name: customer_activity_logs
+  graphql:
+    typeName: fulfillmentServicesCustomerActivityLogs
+    inputTypeName: fulfillmentServicesCustomerActivityLogsInput
+  fields:
+    - name: activity
+      type: text
+    - name: id
+      type: uuid!
+    - name: log_timestamp
+      type: timestamp
+    - name: order_id
+      type: uuid
+
+---
+kind: TypePermissions
+version: v1
+definition:
+  typeName: customer_activity_logs
+  permissions:
+    - role: admin
+      output:
+        allowedFields:
+          - activity
+          - id
+          - log_timestamp
+          - order_id
+
+---
+kind: Model
+version: v1
+definition:
+  name: customer_activity_logs
+  objectType: customer_activity_logs
+  filterableFields:
+    - fieldName: activity
+      operators:
+        enableAll: true
+    - fieldName: id
+      operators:
+        enableAll: true
+    - fieldName: log_timestamp
+      operators:
+        enableAll: true
+    - fieldName: order_id
+      operators:
+        enableAll: true
+  orderableFields:
+    - fieldName: activity
+      orderByDirections:
+        enableAll: true
+    - fieldName: id
+      orderByDirections:
+        enableAll: true
+    - fieldName: log_timestamp
+      orderByDirections:
+        enableAll: true
+    - fieldName: order_id
+      orderByDirections:
+        enableAll: true
+  arguments: []
+  graphql:
+    selectUniques:
+      - queryRootField: fulfillmentServicesCustomerActivityLogsById
+        uniqueIdentifier:
+          - id
+    selectMany:
+      queryRootField: fulfillmentServicesCustomerActivityLogs
+    filterExpressionType: fulfillmentServicesCustomerActivityLogsBoolExp
+    orderByExpressionType: fulfillmentServicesCustomerActivityLogsOrderBy
+  source:
+    collection: customer_activity_logs
+    dataConnectorName: pg_db
+
+---
+kind: ModelPermissions
+version: v1
+definition:
+  modelName: customer_activity_logs
+  permissions:
+    - role: admin
+      select:
+        filter: null
+
+---
+kind: Relationship
+version: v1
+definition:
+  name: order
+  source: customer_activity_logs
+  target:
+    model:
+      relationshipType: Object
+      name: orders
+  mapping:
+    - source:
+        fieldPath:
+          - fieldName: order_id
+      target:
+        modelField:
+          - fieldName: id

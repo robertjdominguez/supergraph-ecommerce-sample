@@ -1,0 +1,122 @@
+kind: ObjectType
+version: v1
+definition:
+  name: transactions
+  graphql:
+    typeName: paymentProcessingTransactions
+    inputTypeName: paymentProcessingTransactionsInput
+  fields:
+    - name: amount
+      type: numeric
+    - name: id
+      type: int4!
+    - name: method_id
+      type: int4
+    - name: status
+      type: varchar
+    - name: transaction_date
+      type: timestamp
+    - name: user_id
+      type: uuid
+
+---
+kind: TypePermissions
+version: v1
+definition:
+  typeName: transactions
+  permissions:
+    - role: admin
+      output:
+        allowedFields:
+          - amount
+          - id
+          - method_id
+          - status
+          - transaction_date
+          - user_id
+
+---
+kind: Model
+version: v1
+definition:
+  name: transactions
+  objectType: transactions
+  filterableFields:
+    - fieldName: amount
+      operators:
+        enableAll: true
+    - fieldName: id
+      operators:
+        enableAll: true
+    - fieldName: method_id
+      operators:
+        enableAll: true
+    - fieldName: status
+      operators:
+        enableAll: true
+    - fieldName: transaction_date
+      operators:
+        enableAll: true
+    - fieldName: user_id
+      operators:
+        enableAll: true
+  orderableFields:
+    - fieldName: amount
+      orderByDirections:
+        enableAll: true
+    - fieldName: id
+      orderByDirections:
+        enableAll: true
+    - fieldName: method_id
+      orderByDirections:
+        enableAll: true
+    - fieldName: status
+      orderByDirections:
+        enableAll: true
+    - fieldName: transaction_date
+      orderByDirections:
+        enableAll: true
+    - fieldName: user_id
+      orderByDirections:
+        enableAll: true
+  arguments: []
+  graphql:
+    selectUniques:
+      - queryRootField: paymentProcessingTransactionsById
+        uniqueIdentifier:
+          - id
+    selectMany:
+      queryRootField: paymentProcessingTransactions
+    filterExpressionType: paymentProcessingTransactionsBoolExp
+    orderByExpressionType: paymentProcessingTransactionsOrderBy
+  source:
+    collection: transactions
+    dataConnectorName: pg_db
+
+---
+kind: ModelPermissions
+version: v1
+definition:
+  modelName: transactions
+  permissions:
+    - role: admin
+      select:
+        filter: null
+
+---
+kind: Relationship
+version: v1
+definition:
+  name: payment_method
+  source: transactions
+  target:
+    model:
+      relationshipType: Object
+      name: payment_methods
+  mapping:
+    - source:
+        fieldPath:
+          - fieldName: method_id
+      target:
+        modelField:
+          - fieldName: id

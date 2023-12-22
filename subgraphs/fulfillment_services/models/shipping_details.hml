@@ -1,0 +1,104 @@
+kind: ObjectType
+version: v1
+definition:
+  name: shipping_details
+  graphql:
+    typeName: fulfillmentServicesShippingDetails
+    inputTypeName: fulfillmentServicesShippingDetailsInput
+  fields:
+    - name: carrier
+      type: varchar
+    - name: estimated_arrival_date
+      type: timestamp
+    - name: id
+      type: uuid!
+    - name: order_id
+      type: uuid
+    - name: shipping_date
+      type: timestamp
+    - name: tracking_number
+      type: varchar
+
+---
+kind: TypePermissions
+version: v1
+definition:
+  typeName: shipping_details
+  permissions:
+    - role: admin
+      output:
+        allowedFields:
+          - carrier
+          - estimated_arrival_date
+          - id
+          - order_id
+          - shipping_date
+          - tracking_number
+
+---
+kind: Model
+version: v1
+definition:
+  name: shipping_details
+  objectType: shipping_details
+  filterableFields:
+    - fieldName: carrier
+      operators:
+        enableAll: true
+    - fieldName: estimated_arrival_date
+      operators:
+        enableAll: true
+    - fieldName: id
+      operators:
+        enableAll: true
+    - fieldName: order_id
+      operators:
+        enableAll: true
+    - fieldName: shipping_date
+      operators:
+        enableAll: true
+    - fieldName: tracking_number
+      operators:
+        enableAll: true
+  orderableFields:
+    - fieldName: carrier
+      orderByDirections:
+        enableAll: true
+    - fieldName: estimated_arrival_date
+      orderByDirections:
+        enableAll: true
+    - fieldName: id
+      orderByDirections:
+        enableAll: true
+    - fieldName: order_id
+      orderByDirections:
+        enableAll: true
+    - fieldName: shipping_date
+      orderByDirections:
+        enableAll: true
+    - fieldName: tracking_number
+      orderByDirections:
+        enableAll: true
+  arguments: []
+  graphql:
+    selectUniques:
+      - queryRootField: fulfillmentServicesShippingDetailsById
+        uniqueIdentifier:
+          - id
+    selectMany:
+      queryRootField: fulfillmentServicesShippingDetails
+    filterExpressionType: fulfillmentServicesShippingDetailsBoolExp
+    orderByExpressionType: fulfillmentServicesShippingDetailsOrderBy
+  source:
+    collection: shipping_details
+    dataConnectorName: pg_db
+
+---
+kind: ModelPermissions
+version: v1
+definition:
+  modelName: shipping_details
+  permissions:
+    - role: admin
+      select:
+        filter: null

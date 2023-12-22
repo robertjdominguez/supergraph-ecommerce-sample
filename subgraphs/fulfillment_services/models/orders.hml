@@ -1,0 +1,141 @@
+kind: ObjectType
+version: v1
+definition:
+  name: orders
+  graphql:
+    typeName: fulfillmentServicesOrders
+    inputTypeName: fulfillmentServicesOrdersInput
+  fields:
+    - name: customer_address
+      type: text
+    - name: customer_id
+      type: uuid
+    - name: id
+      type: uuid!
+    - name: order_date
+      type: timestamp
+    - name: product_id
+      type: uuid
+    - name: quantity
+      type: int4
+
+---
+kind: TypePermissions
+version: v1
+definition:
+  typeName: orders
+  permissions:
+    - role: admin
+      output:
+        allowedFields:
+          - customer_address
+          - customer_id
+          - id
+          - order_date
+          - product_id
+          - quantity
+
+---
+kind: Model
+version: v1
+definition:
+  name: orders
+  objectType: orders
+  filterableFields:
+    - fieldName: customer_address
+      operators:
+        enableAll: true
+    - fieldName: customer_id
+      operators:
+        enableAll: true
+    - fieldName: id
+      operators:
+        enableAll: true
+    - fieldName: order_date
+      operators:
+        enableAll: true
+    - fieldName: product_id
+      operators:
+        enableAll: true
+    - fieldName: quantity
+      operators:
+        enableAll: true
+  orderableFields:
+    - fieldName: customer_address
+      orderByDirections:
+        enableAll: true
+    - fieldName: customer_id
+      orderByDirections:
+        enableAll: true
+    - fieldName: id
+      orderByDirections:
+        enableAll: true
+    - fieldName: order_date
+      orderByDirections:
+        enableAll: true
+    - fieldName: product_id
+      orderByDirections:
+        enableAll: true
+    - fieldName: quantity
+      orderByDirections:
+        enableAll: true
+  arguments: []
+  graphql:
+    selectUniques:
+      - queryRootField: fulfillmentServicesOrdersById
+        uniqueIdentifier:
+          - id
+    selectMany:
+      queryRootField: fulfillmentServicesOrders
+    filterExpressionType: fulfillmentServicesOrdersBoolExp
+    orderByExpressionType: fulfillmentServicesOrdersOrderBy
+  source:
+    collection: orders
+    dataConnectorName: pg_db
+
+---
+kind: ModelPermissions
+version: v1
+definition:
+  modelName: orders
+  permissions:
+    - role: admin
+      select:
+        filter: null
+
+---
+kind: Relationship
+version: v1
+definition:
+  name: customer_activity_logs
+  source: orders
+  target:
+    model:
+      relationshipType: Array
+      name: customer_activity_logs
+  mapping:
+    - source:
+        fieldPath:
+          - fieldName: id
+      target:
+        modelField:
+          - fieldName: order_id
+
+---
+kind: Relationship
+version: v1
+definition:
+  name: product_info
+  source: orders
+  target: 
+    model:
+      name: products
+      relationshipType: Object
+      subgraph: product_management
+  mapping:
+    - source:
+        fieldPath:
+          - fieldName: product_id
+      target:
+        modelField:
+          - fieldName: id

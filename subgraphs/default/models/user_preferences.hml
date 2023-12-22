@@ -1,0 +1,95 @@
+kind: ObjectType
+version: v1
+definition:
+  name: user_preferences
+  graphql:
+    typeName: userPreferences
+    inputTypeName: userPreferencesInput
+  fields:
+    - name: preference_id
+      type: int4!
+    - name: preferences
+      type: jsonb
+    - name: user_id
+      type: uuid
+
+---
+kind: TypePermissions
+version: v1
+definition:
+  typeName: user_preferences
+  permissions:
+    - role: admin
+      output:
+        allowedFields:
+          - preference_id
+          - preferences
+          - user_id
+
+---
+kind: Model
+version: v1
+definition:
+  name: user_preferences
+  objectType: user_preferences
+  filterableFields:
+    - fieldName: preference_id
+      operators:
+        enableAll: true
+    - fieldName: preferences
+      operators:
+        enableAll: true
+    - fieldName: user_id
+      operators:
+        enableAll: true
+  orderableFields:
+    - fieldName: preference_id
+      orderByDirections:
+        enableAll: true
+    - fieldName: preferences
+      orderByDirections:
+        enableAll: true
+    - fieldName: user_id
+      orderByDirections:
+        enableAll: true
+  arguments: []
+  graphql:
+    selectUniques:
+      - queryRootField: userPreferencesByPreferenceId
+        uniqueIdentifier:
+          - preference_id
+    selectMany:
+      queryRootField: userPreferences
+    filterExpressionType: userPreferencesBoolExp
+    orderByExpressionType: userPreferencesOrderBy
+  source:
+    collection: user_preferences
+    dataConnectorName: pg_db
+
+---
+kind: ModelPermissions
+version: v1
+definition:
+  modelName: user_preferences
+  permissions:
+    - role: admin
+      select:
+        filter: null
+
+---
+kind: Relationship
+version: v1
+definition:
+  name: user
+  source: user_preferences
+  target:
+    model:
+      relationshipType: Object
+      name: users
+  mapping:
+    - source:
+        fieldPath:
+          - fieldName: user_id
+      target:
+        modelField:
+          - fieldName: id

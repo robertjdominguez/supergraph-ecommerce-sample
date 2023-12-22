@@ -1,0 +1,156 @@
+kind: ObjectType
+version: v1
+definition:
+  name: users
+  graphql:
+    typeName: users
+    inputTypeName: usersInput
+  fields:
+    - name: email
+      type: varchar!
+    - name: id
+      type: uuid!
+    - name: password_hash
+      type: varchar!
+    - name: registration_date
+      type: timestamp
+    - name: username
+      type: varchar!
+
+---
+kind: TypePermissions
+version: v1
+definition:
+  typeName: users
+  permissions:
+    - role: admin
+      output:
+        allowedFields:
+          - email
+          - id
+          - password_hash
+          - registration_date
+          - username
+
+---
+kind: Model
+version: v1
+definition:
+  name: users
+  objectType: users
+  filterableFields:
+    - fieldName: email
+      operators:
+        enableAll: true
+    - fieldName: id
+      operators:
+        enableAll: true
+    - fieldName: password_hash
+      operators:
+        enableAll: true
+    - fieldName: registration_date
+      operators:
+        enableAll: true
+    - fieldName: username
+      operators:
+        enableAll: true
+  orderableFields:
+    - fieldName: email
+      orderByDirections:
+        enableAll: true
+    - fieldName: id
+      orderByDirections:
+        enableAll: true
+    - fieldName: password_hash
+      orderByDirections:
+        enableAll: true
+    - fieldName: registration_date
+      orderByDirections:
+        enableAll: true
+    - fieldName: username
+      orderByDirections:
+        enableAll: true
+  arguments: []
+  graphql:
+    selectUniques:
+      - queryRootField: usersByEmail
+        uniqueIdentifier:
+          - email
+      - queryRootField: usersById
+        uniqueIdentifier:
+          - id
+      - queryRootField: usersByUsername
+        uniqueIdentifier:
+          - username
+    selectMany:
+      queryRootField: users
+    filterExpressionType: usersBoolExp
+    orderByExpressionType: usersOrderBy
+  source:
+    collection: users
+    dataConnectorName: pg_db
+
+---
+kind: ModelPermissions
+version: v1
+definition:
+  modelName: users
+  permissions:
+    - role: admin
+      select:
+        filter: null
+
+---
+kind: Relationship
+version: v1
+definition:
+  name: user_activity_logs
+  source: users
+  target:
+    model:
+      relationshipType: Array
+      name: user_activity_logs
+  mapping:
+    - source:
+        fieldPath:
+          - fieldName: id
+      target:
+        modelField:
+          - fieldName: user_id
+
+---
+kind: Relationship
+version: v1
+definition:
+  name: user_preferences
+  source: users
+  target:
+    model:
+      relationshipType: Array
+      name: user_preferences
+  mapping:
+    - source:
+        fieldPath:
+          - fieldName: id
+      target:
+        modelField:
+          - fieldName: user_id
+
+---
+kind: Relationship
+version: v1
+definition:
+  name: orders
+  source: users
+  target: 
+    model:
+      name: orders
+      relationshipType: Array
+      subgraph: fulfillment_services
+  mapping:
+    - source:
+        fieldPath:
+          - fieldName: id
+      target:
+        modelField:
+          - fieldName: customer_id

@@ -1,0 +1,104 @@
+kind: ObjectType
+version: v1
+definition:
+  name: user_activity_logs
+  graphql:
+    typeName: userActivityLogs
+    inputTypeName: userActivityLogsInput
+  fields:
+    - name: activity
+      type: text
+    - name: log_id
+      type: int4!
+    - name: log_timestamp
+      type: timestamp
+    - name: user_id
+      type: uuid
+
+---
+kind: TypePermissions
+version: v1
+definition:
+  typeName: user_activity_logs
+  permissions:
+    - role: admin
+      output:
+        allowedFields:
+          - activity
+          - log_id
+          - log_timestamp
+          - user_id
+
+---
+kind: Model
+version: v1
+definition:
+  name: user_activity_logs
+  objectType: user_activity_logs
+  filterableFields:
+    - fieldName: activity
+      operators:
+        enableAll: true
+    - fieldName: log_id
+      operators:
+        enableAll: true
+    - fieldName: log_timestamp
+      operators:
+        enableAll: true
+    - fieldName: user_id
+      operators:
+        enableAll: true
+  orderableFields:
+    - fieldName: activity
+      orderByDirections:
+        enableAll: true
+    - fieldName: log_id
+      orderByDirections:
+        enableAll: true
+    - fieldName: log_timestamp
+      orderByDirections:
+        enableAll: true
+    - fieldName: user_id
+      orderByDirections:
+        enableAll: true
+  arguments: []
+  graphql:
+    selectUniques:
+      - queryRootField: userActivityLogsByLogId
+        uniqueIdentifier:
+          - log_id
+    selectMany:
+      queryRootField: userActivityLogs
+    filterExpressionType: userActivityLogsBoolExp
+    orderByExpressionType: userActivityLogsOrderBy
+  source:
+    collection: user_activity_logs
+    dataConnectorName: pg_db
+
+---
+kind: ModelPermissions
+version: v1
+definition:
+  modelName: user_activity_logs
+  permissions:
+    - role: admin
+      select:
+        filter: null
+
+---
+kind: Relationship
+version: v1
+definition:
+  name: user
+  source: user_activity_logs
+  target:
+    model:
+      relationshipType: Object
+      name: users
+  mapping:
+    - source:
+        fieldPath:
+          - fieldName: user_id
+      target:
+        modelField:
+          - fieldName: id

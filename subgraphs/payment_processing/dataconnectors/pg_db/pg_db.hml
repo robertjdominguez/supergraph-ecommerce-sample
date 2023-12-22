@@ -1,0 +1,328 @@
+kind: HasuraHubDataConnector
+version: v1
+definition:
+  name: pg_db
+  connectorId: hasura/postgres
+  connectorConfiguration:
+  - region: gcp-us-west2
+    mode: ReadOnly
+    configuration:
+      version: 1
+      connectionUri:
+        uri:
+          stringValueFromSecret: PG_DB_URL
+      metadata:
+        aggregateFunctions:
+          int4:
+            avg:
+              returnType: numeric
+            bit_and:
+              returnType: int4
+            bit_or:
+              returnType: int4
+            bit_xor:
+              returnType: int4
+            max:
+              returnType: int4
+            min:
+              returnType: int4
+            stddev:
+              returnType: numeric
+            stddev_pop:
+              returnType: numeric
+            stddev_samp:
+              returnType: numeric
+            var_pop:
+              returnType: numeric
+            var_samp:
+              returnType: numeric
+            variance:
+              returnType: numeric
+          numeric:
+            avg:
+              returnType: numeric
+            max:
+              returnType: numeric
+            min:
+              returnType: numeric
+            stddev:
+              returnType: numeric
+            stddev_pop:
+              returnType: numeric
+            stddev_samp:
+              returnType: numeric
+            sum:
+              returnType: numeric
+            var_pop:
+              returnType: numeric
+            var_samp:
+              returnType: numeric
+            variance:
+              returnType: numeric
+          timestamp:
+            max:
+              returnType: timestamp
+            min:
+              returnType: timestamp
+        comparisonOperators:
+          int4:
+            _eq:
+              argumentType: int4
+              operatorName: "="
+            _gt:
+              argumentType: int4
+              operatorName: ">"
+            _gte:
+              argumentType: int4
+              operatorName: ">="
+            _lt:
+              argumentType: int4
+              operatorName: <
+            _lte:
+              argumentType: int4
+              operatorName: <=
+            _neq:
+              argumentType: int4
+              operatorName: <>
+          jsonb:
+            _eq:
+              argumentType: jsonb
+              operatorName: "="
+            _gt:
+              argumentType: jsonb
+              operatorName: ">"
+            _gte:
+              argumentType: jsonb
+              operatorName: ">="
+            _lt:
+              argumentType: jsonb
+              operatorName: <
+            _lte:
+              argumentType: jsonb
+              operatorName: <=
+            _neq:
+              argumentType: jsonb
+              operatorName: <>
+          numeric:
+            _eq:
+              argumentType: numeric
+              operatorName: "="
+            _gt:
+              argumentType: numeric
+              operatorName: ">"
+            _gte:
+              argumentType: numeric
+              operatorName: ">="
+            _lt:
+              argumentType: numeric
+              operatorName: <
+            _lte:
+              argumentType: numeric
+              operatorName: <=
+            _neq:
+              argumentType: numeric
+              operatorName: <>
+          timestamp:
+            _eq:
+              argumentType: timestamp
+              operatorName: "="
+            _gt:
+              argumentType: timestamp
+              operatorName: ">"
+            _gte:
+              argumentType: timestamp
+              operatorName: ">="
+            _lt:
+              argumentType: timestamp
+              operatorName: <
+            _lte:
+              argumentType: timestamp
+              operatorName: <=
+            _neq:
+              argumentType: timestamp
+              operatorName: <>
+          uuid:
+            _eq:
+              argumentType: uuid
+              operatorName: "="
+            _gt:
+              argumentType: uuid
+              operatorName: ">"
+            _gte:
+              argumentType: uuid
+              operatorName: ">="
+            _lt:
+              argumentType: uuid
+              operatorName: <
+            _lte:
+              argumentType: uuid
+              operatorName: <=
+            _neq:
+              argumentType: uuid
+              operatorName: <>
+          varchar:
+            _eq:
+              argumentType: varchar
+              operatorName: "="
+            _gt:
+              argumentType: varchar
+              operatorName: ">"
+            _gte:
+              argumentType: varchar
+              operatorName: ">="
+            _ilike:
+              argumentType: varchar
+              operatorName: "~~*"
+            _iregex:
+              argumentType: varchar
+              operatorName: "~*"
+            _like:
+              argumentType: varchar
+              operatorName: "~~"
+            _lt:
+              argumentType: varchar
+              operatorName: <
+            _lte:
+              argumentType: varchar
+              operatorName: <=
+            _neq:
+              argumentType: varchar
+              operatorName: <>
+            _nilike:
+              argumentType: varchar
+              operatorName: "!~~*"
+            _niregex:
+              argumentType: varchar
+              operatorName: "!~*"
+            _nlike:
+              argumentType: varchar
+              operatorName: "!~~"
+            _nregex:
+              argumentType: varchar
+              operatorName: "!~"
+            _regex:
+              argumentType: varchar
+              operatorName: "~"
+        nativeQueries: {}
+        tables:
+          payment_methods:
+            columns:
+              id:
+                description: null
+                name: id
+                nullable: nonNullable
+                type: int4
+              method_details:
+                description: null
+                name: method_details
+                nullable: nullable
+                type: jsonb
+              user_id:
+                description: null
+                name: user_id
+                nullable: nullable
+                type: uuid
+            description: null
+            foreignRelations: {}
+            schemaName: public
+            tableName: payment_methods
+            uniquenessConstraints:
+              payment_methods_pkey:
+              - id
+          transactions:
+            columns:
+              amount:
+                description: null
+                name: amount
+                nullable: nullable
+                type: numeric
+              id:
+                description: null
+                name: id
+                nullable: nonNullable
+                type: int4
+              method_id:
+                description: null
+                name: method_id
+                nullable: nullable
+                type: int4
+              status:
+                description: null
+                name: status
+                nullable: nullable
+                type: varchar
+              transaction_date:
+                description: null
+                name: transaction_date
+                nullable: nullable
+                type: timestamp
+              user_id:
+                description: null
+                name: user_id
+                nullable: nullable
+                type: uuid
+            description: null
+            foreignRelations:
+              transactions_method_id_fkey:
+                columnMapping:
+                  method_id: id
+                foreignSchema: public
+                foreignTable: payment_methods
+            schemaName: public
+            tableName: transactions
+            uniquenessConstraints:
+              transactions_pkey:
+              - id
+      configureOptions:
+        comparisonOperatorMapping:
+        - exposedName: _eq
+          operatorName: "="
+        - exposedName: _lte
+          operatorName: <=
+        - exposedName: _gt
+          operatorName: ">"
+        - exposedName: _gte
+          operatorName: ">="
+        - exposedName: _lt
+          operatorName: <
+        - exposedName: _neq
+          operatorName: "!="
+        - exposedName: _like
+          operatorName: LIKE
+        - exposedName: _nlike
+          operatorName: NOT LIKE
+        - exposedName: _ilike
+          operatorName: ILIKE
+        - exposedName: _nilike
+          operatorName: NOT ILIKE
+        - exposedName: _similar
+          operatorName: SIMILAR TO
+        - exposedName: _nsimilar
+          operatorName: NOT SIMILAR TO
+        - exposedName: _neq
+          operatorName: <>
+        - exposedName: _like
+          operatorName: "~~"
+        - exposedName: _nlike
+          operatorName: "!~~"
+        - exposedName: _ilike
+          operatorName: "~~*"
+        - exposedName: _nilike
+          operatorName: "!~~*"
+        - exposedName: _regex
+          operatorName: "~"
+        - exposedName: _nregex
+          operatorName: "!~"
+        - exposedName: _iregex
+          operatorName: "~*"
+        - exposedName: _niregex
+          operatorName: "!~*"
+        excludedSchemas:
+        - information_schema
+        - pg_catalog
+        - tiger
+        - crdb_internal
+        - columnar
+        - columnar_internal
+        unqualifiedSchemas:
+        - public

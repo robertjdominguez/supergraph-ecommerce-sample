@@ -1,0 +1,95 @@
+kind: ObjectType
+version: v1
+definition:
+  name: suppliers
+  graphql:
+    typeName: productManagementSuppliers
+    inputTypeName: productManagementSuppliersInput
+  fields:
+    - name: contact_info
+      type: jsonb
+    - name: name
+      type: varchar!
+    - name: supplier_id
+      type: int4!
+
+---
+kind: TypePermissions
+version: v1
+definition:
+  typeName: suppliers
+  permissions:
+    - role: admin
+      output:
+        allowedFields:
+          - contact_info
+          - name
+          - supplier_id
+
+---
+kind: Model
+version: v1
+definition:
+  name: suppliers
+  objectType: suppliers
+  filterableFields:
+    - fieldName: contact_info
+      operators:
+        enableAll: true
+    - fieldName: name
+      operators:
+        enableAll: true
+    - fieldName: supplier_id
+      operators:
+        enableAll: true
+  orderableFields:
+    - fieldName: contact_info
+      orderByDirections:
+        enableAll: true
+    - fieldName: name
+      orderByDirections:
+        enableAll: true
+    - fieldName: supplier_id
+      orderByDirections:
+        enableAll: true
+  arguments: []
+  graphql:
+    selectUniques:
+      - queryRootField: productManagementSuppliersBySupplierId
+        uniqueIdentifier:
+          - supplier_id
+    selectMany:
+      queryRootField: productManagementSuppliers
+    filterExpressionType: productManagementSuppliersBoolExp
+    orderByExpressionType: productManagementSuppliersOrderBy
+  source:
+    collection: suppliers
+    dataConnectorName: pg_db
+
+---
+kind: ModelPermissions
+version: v1
+definition:
+  modelName: suppliers
+  permissions:
+    - role: admin
+      select:
+        filter: null
+
+---
+kind: Relationship
+version: v1
+definition:
+  name: products
+  source: suppliers
+  target:
+    model:
+      relationshipType: Array
+      name: products
+  mapping:
+    - source:
+        fieldPath:
+          - fieldName: supplier_id
+      target:
+        modelField:
+          - fieldName: supplier_id

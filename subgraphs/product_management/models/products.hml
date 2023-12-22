@@ -1,0 +1,140 @@
+kind: ObjectType
+version: v1
+definition:
+  name: products
+  graphql:
+    typeName: productManagementProducts
+    inputTypeName: productManagementProductsInput
+  fields:
+    - name: category_id
+      type: int4
+    - name: description
+      type: text
+    - name: id
+      type: uuid!
+    - name: name
+      type: varchar!
+    - name: price
+      type: numeric
+    - name: supplier_id
+      type: int4
+
+---
+kind: TypePermissions
+version: v1
+definition:
+  typeName: products
+  permissions:
+    - role: admin
+      output:
+        allowedFields:
+          - category_id
+          - description
+          - id
+          - name
+          - price
+          - supplier_id
+
+---
+kind: Model
+version: v1
+definition:
+  name: products
+  objectType: products
+  filterableFields:
+    - fieldName: category_id
+      operators:
+        enableAll: true
+    - fieldName: description
+      operators:
+        enableAll: true
+    - fieldName: id
+      operators:
+        enableAll: true
+    - fieldName: name
+      operators:
+        enableAll: true
+    - fieldName: price
+      operators:
+        enableAll: true
+    - fieldName: supplier_id
+      operators:
+        enableAll: true
+  orderableFields:
+    - fieldName: category_id
+      orderByDirections:
+        enableAll: true
+    - fieldName: description
+      orderByDirections:
+        enableAll: true
+    - fieldName: id
+      orderByDirections:
+        enableAll: true
+    - fieldName: name
+      orderByDirections:
+        enableAll: true
+    - fieldName: price
+      orderByDirections:
+        enableAll: true
+    - fieldName: supplier_id
+      orderByDirections:
+        enableAll: true
+  arguments: []
+  graphql:
+    selectUniques:
+      - queryRootField: productManagementProductsById
+        uniqueIdentifier:
+          - id
+    selectMany:
+      queryRootField: productManagementProducts
+    filterExpressionType: productManagementProductsBoolExp
+    orderByExpressionType: productManagementProductsOrderBy
+  source:
+    collection: products
+    dataConnectorName: pg_db
+
+---
+kind: ModelPermissions
+version: v1
+definition:
+  modelName: products
+  permissions:
+    - role: admin
+      select:
+        filter: null
+
+---
+kind: Relationship
+version: v1
+definition:
+  name: category
+  source: products
+  target:
+    model:
+      relationshipType: Object
+      name: categories
+  mapping:
+    - source:
+        fieldPath:
+          - fieldName: category_id
+      target:
+        modelField:
+          - fieldName: category_id
+
+---
+kind: Relationship
+version: v1
+definition:
+  name: supplier
+  source: products
+  target:
+    model:
+      relationshipType: Object
+      name: suppliers
+  mapping:
+    - source:
+        fieldPath:
+          - fieldName: supplier_id
+      target:
+        modelField:
+          - fieldName: supplier_id

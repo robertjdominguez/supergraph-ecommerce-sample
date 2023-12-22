@@ -1,0 +1,36 @@
+version: 2
+spec:
+  environment: default
+  mode: replace
+  supergraph:
+    resources:
+      - supergraph/*
+  subgraphs:
+    - name: default
+      resources:
+        - subgraphs/default/**/*.hml
+      connectors:
+        pg_db:
+          path: subgraphs/default/dataconnectors/pg_db
+          connectorConfigFile: pg_db.hml
+    - name: fulfillment_services
+      resources:
+        - subgraphs/fulfillment_services/**/*.hml
+      connectors:
+        pg_db:
+          path: subgraphs/fulfillment_services/dataconnectors/pg_db
+          connectorConfigFile: pg_db.hml
+    - name: payment_processing
+      resources:
+        - subgraphs/payment_processing/**/*.hml
+      connectors:
+        pg_db:
+          path: subgraphs/payment_processing/dataconnectors/pg_db
+          connectorConfigFile: pg_db.hml
+    - name: product_management
+      resources:
+        - subgraphs/product_management/**/*.hml
+      connectors:
+        pg_db:
+          path: subgraphs/product_management/dataconnectors/pg_db
+          connectorConfigFile: pg_db.hml
